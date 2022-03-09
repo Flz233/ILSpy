@@ -56,6 +56,7 @@ using ICSharpCode.ILSpy.Options;
 using ICSharpCode.ILSpy.Themes;
 using ICSharpCode.ILSpy.TreeNodes;
 using ICSharpCode.ILSpy.ViewModels;
+using ICSharpCode.ILSpyX;
 
 using Microsoft.Win32;
 
@@ -825,7 +826,7 @@ namespace ICSharpCode.ILSpy.TextView
 				})
 			.Then(
 				delegate (AvalonEditTextOutput textOutput) { // handling the result
-					ShowOutput(textOutput, context.Language.SyntaxHighlighting, context.Options.TextViewState);
+					ShowOutput(textOutput, context.Language.SyntaxHighlighting, (DecompilerTextViewState?)context.Options.ViewState);
 				})
 			.Catch<Exception>(exception => {
 				textEditor.SyntaxHighlighting = null;

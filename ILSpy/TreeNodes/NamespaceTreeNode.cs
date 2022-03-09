@@ -20,6 +20,7 @@ using System;
 using System.Linq;
 
 using ICSharpCode.Decompiler;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy.TreeNodes
 {

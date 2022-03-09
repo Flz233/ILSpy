@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 
+using ICSharpCode.ILSpy.Options;
 using ICSharpCode.ILSpy.Properties;
 using ICSharpCode.ILSpy.TreeNodes;
 using ICSharpCode.ILSpy.ViewModels;
@@ -82,7 +83,8 @@ namespace ICSharpCode.ILSpy.TextView
 
 				// Fallback: if nobody was able to handle the request, use default behavior.
 				// try to save all nodes to disk.
-				var options = new DecompilationOptions() { FullDecompilation = true };
+				var options = DecompilationOptionsFactory.Create();
+				options.FullDecompilation = true;
 				textView.SaveToDisk(currentLanguage, selectedNodes.OfType<ILSpyTreeNode>(), options);
 			});
 		}

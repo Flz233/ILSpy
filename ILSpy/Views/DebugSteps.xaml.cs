@@ -7,6 +7,7 @@ using System.Windows.Input;
 using ICSharpCode.Decompiler.IL;
 using ICSharpCode.Decompiler.IL.Transforms;
 using ICSharpCode.ILSpy.Docking;
+using ICSharpCode.ILSpy.Options;
 using ICSharpCode.ILSpy.ViewModels;
 
 namespace ICSharpCode.ILSpy
@@ -132,12 +133,12 @@ namespace ICSharpCode.ILSpy
 			lastSelectedStep = step;
 			var window = MainWindow.Instance;
 			var state = DockWorkspace.Instance.ActiveTabPage.GetState();
-			DockWorkspace.Instance.ActiveTabPage.ShowTextViewAsync(textView => textView.DecompileAsync(window.CurrentLanguage, window.SelectedNodes,
-				new DecompilationOptions(window.CurrentLanguageVersion) {
-					StepLimit = step,
-					IsDebug = isDebug,
-					TextViewState = state as TextView.DecompilerTextViewState
-				}));
+			var options = DecompilationOptionsFactory.Create(window.CurrentLanguageVersion);
+			options.StepLimit = step;
+			options.IsDebug = isDebug;
+			options.ViewState = state as TextView.DecompilerTextViewState;
+			DockWorkspace.Instance.ActiveTabPage.ShowTextViewAsync(textView => textView.DecompileAsync(
+				window.CurrentLanguage, window.SelectedNodes, options));
 		}
 
 		private void tree_KeyDown(object sender, KeyEventArgs e)

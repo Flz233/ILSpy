@@ -25,8 +25,10 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using ICSharpCode.Decompiler;
+using ICSharpCode.ILSpy.Options;
 using ICSharpCode.ILSpy.Properties;
 using ICSharpCode.ILSpy.TextView;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy
 {
@@ -54,7 +56,10 @@ namespace ICSharpCode.ILSpy
 							{
 								try
 								{
-									new CSharpLanguage().DecompileAssembly(asm, new Decompiler.PlainTextOutput(writer), new DecompilationOptions() { FullDecompilation = true, CancellationToken = ct });
+									var options = DecompilationOptionsFactory.Create();
+									options.FullDecompilation = true;
+									options.CancellationToken = ct;
+									new CSharpLanguage().DecompileAssembly(asm, new Decompiler.PlainTextOutput(writer), options);
 								}
 								catch (Exception ex)
 								{
@@ -87,7 +92,7 @@ namespace ICSharpCode.ILSpy
 			const int numRuns = 100;
 			var language = MainWindow.Instance.CurrentLanguage;
 			var nodes = MainWindow.Instance.SelectedNodes.ToArray();
-			var options = new DecompilationOptions();
+			var options = DecompilationOptionsFactory.Create();
 			Docking.DockWorkspace.Instance.RunWithCancellation(ct => Task<AvalonEditTextOutput>.Factory.StartNew(() => {
 				options.CancellationToken = ct;
 				Stopwatch w = Stopwatch.StartNew();

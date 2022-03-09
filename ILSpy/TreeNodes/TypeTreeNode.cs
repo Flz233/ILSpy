@@ -22,6 +22,7 @@ using System.Reflection;
 using System.Windows.Media;
 
 using ICSharpCode.Decompiler;
+using ICSharpCode.ILSpyX;
 
 using SRM = System.Reflection.Metadata;
 

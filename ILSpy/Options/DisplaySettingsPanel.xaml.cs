@@ -26,6 +26,8 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using System.Xml.Linq;
 
+using ICSharpCode.ILSpyX;
+
 namespace ICSharpCode.ILSpy.Options
 {
 	/// <summary>
@@ -72,7 +74,7 @@ namespace ICSharpCode.ILSpy.Options
 
 		public static DisplaySettings CurrentDisplaySettings {
 			get {
-				return currentDisplaySettings ?? (currentDisplaySettings = LoadDisplaySettings(ILSpySettings.Load()));
+				return currentDisplaySettings ?? (currentDisplaySettings = LoadDisplaySettings(ILSpySettings.Load(MainWindow.GetConfigFile())));
 			}
 		}
 

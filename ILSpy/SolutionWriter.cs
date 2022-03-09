@@ -28,7 +28,9 @@ using System.Threading.Tasks;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.Solution;
 using ICSharpCode.Decompiler.Util;
+using ICSharpCode.ILSpy.Options;
 using ICSharpCode.ILSpy.TextView;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy
 {
@@ -211,11 +213,10 @@ namespace ICSharpCode.ILSpy
 				using (var projectFileWriter = new StreamWriter(projectFileName))
 				{
 					var projectFileOutput = new PlainTextOutput(projectFileWriter);
-					var options = new DecompilationOptions() {
-						FullDecompilation = true,
-						CancellationToken = ct,
-						SaveAsProjectDirectory = targetDirectory
-					};
+					var options = DecompilationOptionsFactory.Create();
+					options.FullDecompilation = true;
+					options.CancellationToken = ct;
+					options.SaveAsProjectDirectory = targetDirectory;
 
 					var projectInfo = language.DecompileAssembly(loadedAssembly, projectFileOutput, options);
 					if (projectInfo != null)

@@ -21,6 +21,7 @@ using System.Reflection.Metadata;
 using System.Windows.Media;
 
 using ICSharpCode.Decompiler;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy.TreeNodes
 {

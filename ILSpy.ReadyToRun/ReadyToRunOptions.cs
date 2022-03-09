@@ -18,6 +18,8 @@
 
 using System.Xml.Linq;
 
+using ICSharpCode.ILSpyX;
+
 namespace ICSharpCode.ILSpy.ReadyToRun
 {
 	internal class ReadyToRunOptions
@@ -32,7 +34,7 @@ namespace ICSharpCode.ILSpy.ReadyToRun
 		{
 			if (settings == null)
 			{
-				settings = ILSpySettings.Load();
+				settings = ILSpySettings.Load(MainWindow.GetConfigFile());
 			}
 			XElement e = settings[ns + "ReadyToRunOptions"];
 			XAttribute a = e.Attribute("DisassemblyFormat");
@@ -50,7 +52,7 @@ namespace ICSharpCode.ILSpy.ReadyToRun
 		{
 			if (settings == null)
 			{
-				settings = ILSpySettings.Load();
+				settings = ILSpySettings.Load(MainWindow.GetConfigFile());
 			}
 			XElement e = settings[ns + "ReadyToRunOptions"];
 			XAttribute a = e.Attribute("IsShowUnwindInfo");
@@ -69,7 +71,7 @@ namespace ICSharpCode.ILSpy.ReadyToRun
 		{
 			if (settings == null)
 			{
-				settings = ILSpySettings.Load();
+				settings = ILSpySettings.Load(MainWindow.GetConfigFile());
 			}
 			XElement e = settings[ns + "ReadyToRunOptions"];
 			XAttribute a = e.Attribute("IsShowDebugInfo");

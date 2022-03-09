@@ -28,6 +28,7 @@ using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.Disassembler;
 using ICSharpCode.Decompiler.IL;
 using ICSharpCode.Decompiler.Metadata;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy.Metadata
 {

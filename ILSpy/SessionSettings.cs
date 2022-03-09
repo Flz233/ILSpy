@@ -28,6 +28,7 @@ using System.Xml.Linq;
 
 using ICSharpCode.ILSpy.Docking;
 using ICSharpCode.ILSpy.Themes;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy
 {
@@ -160,7 +161,7 @@ namespace ICSharpCode.ILSpy
 			}
 			doc.Add(dockLayoutElement);
 
-			ILSpySettings.SaveSettings(doc);
+			ILSpySettings.SaveSettings(doc, MainWindow.GetConfigFile());
 		}
 
 		static Regex regex = new Regex("\\\\x(?<num>[0-9A-f]{4})");

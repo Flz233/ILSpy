@@ -22,23 +22,28 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace ICSharpCode.ILSpy
+namespace ICSharpCode.ILSpyX
 {
 	/// <summary>
-	/// Manages IL Spy settings.
+	/// Manages ILSpy settings.
 	/// </summary>
 	public class ILSpySettings
 	{
+		readonly string fileName;
 		readonly XElement root;
 
-		ILSpySettings()
+		public string FileName => fileName;
+
+		ILSpySettings(string fileName)
 		{
 			this.root = new XElement("ILSpy");
+			this.fileName = fileName;
 		}
 
-		ILSpySettings(XElement root)
+		ILSpySettings(XElement root, string fileName)
 		{
 			this.root = root;
+			this.fileName = fileName;
 		}
 
 		public XElement this[XName section] {
@@ -53,22 +58,22 @@ namespace ICSharpCode.ILSpy
 		/// <returns>
 		/// An instance used to access the loaded settings.
 		/// </returns>
-		public static ILSpySettings Load()
+		public static ILSpySettings Load(string configFile)
 		{
 			using (new MutexProtector(ConfigFileMutex))
 			{
 				try
 				{
-					XDocument doc = LoadWithoutCheckingCharacters(GetConfigFile());
-					return new ILSpySettings(doc.Root);
+					XDocument doc = LoadWithoutCheckingCharacters(configFile);
+					return new ILSpySettings(doc.Root, configFile);
 				}
 				catch (IOException)
 				{
-					return new ILSpySettings();
+					return new ILSpySettings(configFile);
 				}
 				catch (XmlException)
 				{
-					return new ILSpySettings();
+					return new ILSpySettings(configFile);
 				}
 			}
 		}
@@ -81,7 +86,7 @@ namespace ICSharpCode.ILSpy
 		/// <summary>
 		/// Saves a setting section.
 		/// </summary>
-		public static void SaveSettings(XElement section)
+		public static void SaveSettings(XElement section, string fileName)
 		{
 			Update(
 				delegate (XElement root) {
@@ -90,7 +95,7 @@ namespace ICSharpCode.ILSpy
 						existingElement.ReplaceWith(section);
 					else
 						root.Add(section);
-				});
+				}, fileName);
 		}
 
 		/// <summary>
@@ -98,20 +103,19 @@ namespace ICSharpCode.ILSpy
 		/// We always reload the file on updates to ensure we aren't overwriting unrelated changes performed
 		/// by another ILSpy instance.
 		/// </summary>
-		public static void Update(Action<XElement> action)
+		public static void Update(Action<XElement> action, string configFile)
 		{
 			using (new MutexProtector(ConfigFileMutex))
 			{
-				string config = GetConfigFile();
 				XDocument doc;
 				try
 				{
-					doc = LoadWithoutCheckingCharacters(config);
+					doc = LoadWithoutCheckingCharacters(configFile);
 				}
 				catch (IOException)
 				{
 					// ensure the directory exists
-					Directory.CreateDirectory(Path.GetDirectoryName(config));
+					Directory.CreateDirectory(Path.GetDirectoryName(configFile));
 					doc = new XDocument(new XElement("ILSpy"));
 				}
 				catch (XmlException)
@@ -120,18 +124,8 @@ namespace ICSharpCode.ILSpy
 				}
 				doc.Root.SetAttributeValue("version", RevisionClass.Major + "." + RevisionClass.Minor + "." + RevisionClass.Build + "." + RevisionClass.Revision);
 				action(doc.Root);
-				doc.Save(config, SaveOptions.None);
+				doc.Save(configFile, SaveOptions.None);
 			}
-		}
-
-		static string GetConfigFile()
-		{
-			if (App.CommandLineArguments.ConfigFile != null)
-				return App.CommandLineArguments.ConfigFile;
-			string localPath = Path.Combine(Path.GetDirectoryName(typeof(MainWindow).Assembly.Location), "ILSpy.xml");
-			if (File.Exists(localPath))
-				return localPath;
-			return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ICSharpCode\\ILSpy.xml");
 		}
 
 		const string ConfigFileMutex = "01A91708-49D1-410D-B8EB-4DE2662B3971";

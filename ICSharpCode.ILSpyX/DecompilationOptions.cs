@@ -16,12 +16,11 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Threading;
 
-using ICSharpCode.ILSpy.Options;
+using ICSharpCode.Decompiler;
 
-namespace ICSharpCode.ILSpy
+namespace ICSharpCode.ILSpyX
 {
 	/// <summary>
 	/// Options passed to the decompiler.
@@ -37,7 +36,7 @@ namespace ICSharpCode.ILSpy
 		/// <summary>
 		/// Gets/Sets the directory into which the project is saved.
 		/// </summary>
-		public string SaveAsProjectDirectory { get; set; }
+		public string? SaveAsProjectDirectory { get; set; }
 
 		/// <summary>
 		/// Gets/sets whether invalid identifiers should be escaped (and therefore the code be made compilable).
@@ -57,7 +56,7 @@ namespace ICSharpCode.ILSpy
 		/// <summary>
 		/// Gets the settings for the decompiler.
 		/// </summary>
-		public Decompiler.DecompilerSettings DecompilerSettings { get; private set; }
+		public DecompilerSettings DecompilerSettings { get; }
 
 		/// <summary>
 		/// Gets/sets an optional state of a decompiler text view.
@@ -65,7 +64,7 @@ namespace ICSharpCode.ILSpy
 		/// <remarks>
 		/// This state is used to restore test view's state when decompilation is started by Go Back/Forward action.
 		/// </remarks>
-		public TextView.DecompilerTextViewState TextViewState { get; set; }
+		public object? ViewState { get; set; }
 
 		/// <summary>
 		/// Used internally for debugging.
@@ -73,38 +72,9 @@ namespace ICSharpCode.ILSpy
 		internal int StepLimit = int.MaxValue;
 		internal bool IsDebug = false;
 
-		public DecompilationOptions()
-			: this(MainWindow.Instance.CurrentLanguageVersion, DecompilerSettingsPanel.CurrentDecompilerSettings, DisplaySettingsPanel.CurrentDisplaySettings)
+		public DecompilationOptions(DecompilerSettings decompilerSettings)
 		{
-		}
-
-		public DecompilationOptions(LanguageVersion version)
-			: this(version, DecompilerSettingsPanel.CurrentDecompilerSettings, DisplaySettingsPanel.CurrentDisplaySettings)
-		{
-		}
-
-		public DecompilationOptions(LanguageVersion version, Decompiler.DecompilerSettings settings, Options.DisplaySettings displaySettings)
-		{
-			if (!Enum.TryParse(version?.Version, out Decompiler.CSharp.LanguageVersion languageVersion))
-				languageVersion = Decompiler.CSharp.LanguageVersion.Latest;
-			var newSettings = this.DecompilerSettings = settings.Clone();
-			newSettings.SetLanguageVersion(languageVersion);
-			newSettings.ExpandMemberDefinitions = displaySettings.ExpandMemberDefinitions;
-			newSettings.ExpandUsingDeclarations = displaySettings.ExpandUsingDeclarations;
-			newSettings.FoldBraces = displaySettings.FoldBraces;
-			newSettings.ShowDebugInfo = displaySettings.ShowDebugInfo;
-			newSettings.CSharpFormattingOptions.IndentationString = GetIndentationString(displaySettings);
-		}
-
-		private string GetIndentationString(DisplaySettings displaySettings)
-		{
-			if (displaySettings.IndentationUseTabs)
-			{
-				int numberOfTabs = displaySettings.IndentationSize / displaySettings.IndentationTabSize;
-				int numberOfSpaces = displaySettings.IndentationSize % displaySettings.IndentationTabSize;
-				return new string('\t', numberOfTabs) + new string(' ', numberOfSpaces);
-			}
-			return new string(' ', displaySettings.IndentationSize);
+			this.DecompilerSettings = decompilerSettings;
 		}
 	}
 }

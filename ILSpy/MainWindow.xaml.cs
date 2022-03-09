@@ -45,10 +45,12 @@ using ICSharpCode.Decompiler.TypeSystem.Implementation;
 using ICSharpCode.ILSpy.Analyzers;
 using ICSharpCode.ILSpy.Commands;
 using ICSharpCode.ILSpy.Docking;
+using ICSharpCode.ILSpy.Options;
 using ICSharpCode.ILSpy.TextView;
 using ICSharpCode.ILSpy.Themes;
 using ICSharpCode.ILSpy.TreeNodes;
 using ICSharpCode.ILSpy.ViewModels;
+using ICSharpCode.ILSpyX;
 using ICSharpCode.TreeView;
 
 using Microsoft.Win32;
@@ -98,10 +100,20 @@ namespace ICSharpCode.ILSpy
 			}
 		}
 
+		public static string GetConfigFile()
+		{
+			if (App.CommandLineArguments.ConfigFile != null)
+				return App.CommandLineArguments.ConfigFile;
+			string localPath = Path.Combine(Path.GetDirectoryName(typeof(MainWindow).Assembly.Location), "ILSpy.xml");
+			if (File.Exists(localPath))
+				return localPath;
+			return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ICSharpCode\\ILSpy.xml");
+		}
+
 		public MainWindow()
 		{
 			instance = this;
-			var spySettings = ILSpySettings.Load();
+			var spySettings = ILSpySettings.Load(GetConfigFile());
 			this.spySettingsForMainWindow_Loaded = spySettings;
 			this.sessionSettings = new SessionSettings(spySettings);
 			this.AssemblyListManager = new AssemblyListManager(spySettings);
@@ -854,8 +866,8 @@ namespace ICSharpCode.ILSpy
 			}
 			else
 			{
-				this.assemblyList = new AssemblyList(AssemblyListManager.DefaultListName);
 				AssemblyListManager.ClearAll();
+				this.assemblyList = AssemblyListManager.CreateList(AssemblyListManager.DefaultListName);
 			}
 
 			HandleCommandLineArguments(App.CommandLineArguments);
@@ -959,7 +971,7 @@ namespace ICSharpCode.ILSpy
 			else
 			{
 				updatePanel.Visibility = Visibility.Collapsed;
-				string downloadUrl = await AboutPage.CheckForUpdatesAsync(ILSpySettings.Load());
+				string downloadUrl = await AboutPage.CheckForUpdatesAsync(ILSpySettings.Load(MainWindow.GetConfigFile()));
 				AdjustUpdateUIAfterCheck(downloadUrl, true);
 			}
 		}
@@ -983,7 +995,7 @@ namespace ICSharpCode.ILSpy
 
 		public void ShowAssemblyList(string name)
 		{
-			AssemblyList list = this.AssemblyListManager.LoadList(ILSpySettings.Load(), name);
+			AssemblyList list = this.AssemblyListManager.LoadList(ILSpySettings.Load(GetConfigFile()), name);
 			//Only load a new list when it is a different one
 			if (list.ListName != CurrentAssemblyList.ListName)
 			{
@@ -1409,7 +1421,7 @@ namespace ICSharpCode.ILSpy
 			{
 				refreshInProgress = true;
 				var path = GetPathForNode(AssemblyTreeView.SelectedItem as SharpTreeNode);
-				ShowAssemblyList(AssemblyListManager.LoadList(ILSpySettings.Load(), assemblyList.ListName));
+				ShowAssemblyList(AssemblyListManager.LoadList(ILSpySettings.Load(MainWindow.GetConfigFile()), assemblyList.ListName));
 				SelectNode(FindNodeByPath(path, true), false, false);
 			}
 			finally
@@ -1473,7 +1485,8 @@ namespace ICSharpCode.ILSpy
 				NavigateTo(new RequestNavigateEventArgs(newState.ViewedUri, null), recordHistory: false);
 				return;
 			}
-			var options = new DecompilationOptions() { TextViewState = newState };
+			var options = DecompilationOptionsFactory.Create();
+			options.ViewState = newState;
 			decompilationTask = DockWorkspace.Instance.ActiveTabPage.ShowTextViewAsync(
 				textView => textView.DecompileAsync(this.CurrentLanguage, this.SelectedNodes, options)
 			);

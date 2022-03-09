@@ -24,6 +24,7 @@ using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.Metadata;
 using ICSharpCode.Decompiler.TypeSystem;
 using ICSharpCode.ILSpy.Properties;
+using ICSharpCode.ILSpyX;
 
 using SRM = System.Reflection.Metadata;
 

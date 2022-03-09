@@ -21,6 +21,7 @@ using System.Linq;
 using System.Threading;
 
 using ICSharpCode.Decompiler;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy.TreeNodes
 {

@@ -22,3 +22,5 @@ multitargeting.props
 ILSpy.Installer/wix/
 ILSpy.Installer/AppPackage.cs
 /VERSION
+/ICSharpCode.ILSpyX/Properties/AssemblyInfo.cs
+/ILSpy/Properties/RevisionClass.cs

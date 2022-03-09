@@ -29,8 +29,11 @@ using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp.ProjectDecompiler;
 using ICSharpCode.Decompiler.Metadata;
 using ICSharpCode.Decompiler.TypeSystem;
+using ICSharpCode.ILSpy.Options;
 using ICSharpCode.ILSpy.Properties;
 using ICSharpCode.ILSpy.ViewModels;
+using ICSharpCode.ILSpyX;
+using ICSharpCode.ILSpyX.PdbProvider;
 using ICSharpCode.TreeView;
 
 using Microsoft.Win32;
@@ -204,7 +207,7 @@ namespace ICSharpCode.ILSpy.TreeNodes
 			var assembly = (MetadataModule)typeSystem.MainModule;
 			this.Children.Add(new Metadata.MetadataTreeNode(module, this));
 			Decompiler.DebugInfo.IDebugInfoProvider debugInfo = LoadedAssembly.GetDebugInfoOrNull();
-			if (debugInfo is Decompiler.PdbProvider.PortableDebugInfoProvider ppdb
+			if (debugInfo is PortableDebugInfoProvider ppdb
 				&& ppdb.GetMetadataReader() is System.Reflection.Metadata.MetadataReader reader)
 			{
 				this.Children.Add(new Metadata.DebugMetadataTreeNode(module, ppdb.IsEmbedded, reader, this));
@@ -389,7 +392,7 @@ namespace ICSharpCode.ILSpy.TreeNodes
 			dlg.Filter = language.Name + " project|*" + language.ProjectFileExtension + "|" + language.Name + " single file|*" + language.FileExtension + "|All files|*.*";
 			if (dlg.ShowDialog() == true)
 			{
-				DecompilationOptions options = new DecompilationOptions();
+				DecompilationOptions options = DecompilationOptionsFactory.Create();
 				options.FullDecompilation = true;
 				if (dlg.FilterIndex == 1)
 				{

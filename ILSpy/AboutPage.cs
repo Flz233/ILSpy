@@ -35,6 +35,7 @@ using ICSharpCode.Decompiler;
 using ICSharpCode.ILSpy.Properties;
 using ICSharpCode.ILSpy.TextView;
 using ICSharpCode.ILSpy.Themes;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy
 {
@@ -82,7 +83,7 @@ namespace ICSharpCode.ILSpy
 				CheckBox checkBox = new CheckBox();
 				checkBox.Margin = new Thickness(4);
 				checkBox.Content = Resources.AutomaticallyCheckUpdatesEveryWeek;
-				UpdateSettings settings = new UpdateSettings(ILSpySettings.Load());
+				UpdateSettings settings = new UpdateSettings(ILSpySettings.Load(MainWindow.GetConfigFile()));
 				checkBox.SetBinding(CheckBox.IsCheckedProperty, new Binding("AutomaticUpdateCheckEnabled") { Source = settings });
 				return new StackPanel {
 					Margin = new Thickness(0, 4, 0, 0),
@@ -274,7 +275,7 @@ namespace ICSharpCode.ILSpy
 				updateSettings.Add(new XElement("AutomaticUpdateCheckEnabled", automaticUpdateCheckEnabled));
 				if (lastSuccessfulUpdateCheck != null)
 					updateSettings.Add(new XElement("LastSuccessfulUpdateCheck", lastSuccessfulUpdateCheck));
-				ILSpySettings.SaveSettings(updateSettings);
+				ILSpySettings.SaveSettings(updateSettings, MainWindow.GetConfigFile());
 			}
 
 			public event PropertyChangedEventHandler PropertyChanged;

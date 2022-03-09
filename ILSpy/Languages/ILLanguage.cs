@@ -29,7 +29,9 @@ using ICSharpCode.Decompiler.Metadata;
 using ICSharpCode.Decompiler.Solution;
 using ICSharpCode.Decompiler.TypeSystem;
 using ICSharpCode.Decompiler.Util;
+using ICSharpCode.ILSpy.Options;
 using ICSharpCode.ILSpy.TextView;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy
 {
@@ -193,7 +195,7 @@ namespace ICSharpCode.ILSpy
 		public override RichText GetRichTextTooltip(IEntity entity)
 		{
 			var output = new AvalonEditTextOutput() { IgnoreNewLineAndIndent = true };
-			var disasm = CreateDisassembler(output, new DecompilationOptions());
+			var disasm = CreateDisassembler(output, DecompilationOptionsFactory.Create());
 			switch (entity.SymbolKind)
 			{
 				case SymbolKind.TypeDefinition:

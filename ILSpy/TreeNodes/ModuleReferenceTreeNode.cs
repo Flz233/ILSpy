@@ -20,6 +20,7 @@ using System;
 using System.Reflection.Metadata;
 
 using ICSharpCode.Decompiler;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy.TreeNodes
 {

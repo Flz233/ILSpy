@@ -55,7 +55,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\ICSharpCode.Decompiler.PdbProvider.Cecil\MonoCecilDebugInfoProvider.cs" Link="DebugInfo\MonoCecilDebugInfoProvider.cs" />
     <EmbeddedResource Include="..\doc\ILSpyAboutPage.txt" />
     <EmbeddedResource Include="..\doc\ILSpyAboutPage_zh_Hans.txt" />
     <EmbeddedResource Include="..\doc\third-party-notices.txt" />
@@ -74,6 +73,7 @@
     <EmbeddedResource Include="TextView\Asm-Mode-Dark.xshd" />
     <EmbeddedResource Include="TextView\XML-Mode-Dark.xshd" />
     <Compile Remove="Properties\AssemblyInfo.template.cs" />
+    <Compile Remove="Properties\RevisionClass.template.cs" />
     <None Remove="Properties\launchSettings.json" />
     <None Remove="Properties\app.config.template" />
   </ItemGroup>
@@ -94,6 +94,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ICSharpCode.ILSpyX\ICSharpCode.ILSpyX.csproj" />
     <ProjectReference Include="..\ICSharpCode.Decompiler\ICSharpCode.Decompiler.csproj" />
     <ProjectReference Include="..\SharpTreeView\ICSharpCode.TreeView.csproj" />
   </ItemGroup>

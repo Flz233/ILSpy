@@ -80,6 +80,8 @@ function gitBranch() {
 
 $templateFiles = (
 	@{Input=$globalAssemblyInfoTemplateFile; Output="ILSpy/Properties/AssemblyInfo.cs"},
+	@{Input="ILSpy/Properties/RevisionClass.template.cs"; Output="ILSpy/Properties/RevisionClass.cs"},
+	@{Input="ICSharpCode.ILSpyX/Properties/AssemblyInfo.template.cs"; Output="ICSharpCode.ILSpyX/Properties/AssemblyInfo.cs"},
 	@{Input="ICSharpCode.Decompiler/Properties/AssemblyInfo.template.cs"; Output="ICSharpCode.Decompiler/Properties/AssemblyInfo.cs"},
     @{Input="ILSpy/Properties/app.config.template"; Output = "ILSpy/app.config"},
     @{Input="ILSpy.AddIn/source.extension.vsixmanifest.template"; Output = "ILSpy.AddIn/source.extension.vsixmanifest"},
@@ -106,7 +108,7 @@ try {
     }
 
     $versionParts = @{};
-    Get-Content $globalAssemblyInfoTemplateFile | where { $_ -match 'string (\w+) = "?(\w+)"?;' } | foreach { $versionParts.Add($Matches[1], $Matches[2]) }
+    Get-Content "ILSpy/Properties/RevisionClass.template.cs" | where { $_ -match 'string (\w+) = "?(\w+)"?;' } | foreach { $versionParts.Add($Matches[1], $Matches[2]) }
 
     $major = $versionParts.Major;
     $minor = $versionParts.Minor;

@@ -23,8 +23,10 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
+using ICSharpCode.ILSpy.Options;
 using ICSharpCode.ILSpy.Properties;
 using ICSharpCode.ILSpy.TextView;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy
 {
@@ -52,7 +54,10 @@ namespace ICSharpCode.ILSpy
 							{
 								try
 								{
-									new ILLanguage().DecompileAssembly(asm, new Decompiler.PlainTextOutput(writer), new DecompilationOptions { FullDecompilation = true, CancellationToken = ct });
+									var options = DecompilationOptionsFactory.Create();
+									options.FullDecompilation = true;
+									options.CancellationToken = ct;
+									new ILLanguage().DecompileAssembly(asm, new Decompiler.PlainTextOutput(writer), options);
 								}
 								catch (Exception ex)
 								{

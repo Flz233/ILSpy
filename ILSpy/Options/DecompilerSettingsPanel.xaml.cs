@@ -27,6 +27,7 @@ using System.Xml.Linq;
 
 using ICSharpCode.ILSpy.Properties;
 using ICSharpCode.ILSpy.TreeNodes;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy.Options
 {
@@ -50,7 +51,7 @@ namespace ICSharpCode.ILSpy.Options
 
 		public static Decompiler.DecompilerSettings CurrentDecompilerSettings {
 			get {
-				return currentDecompilerSettings ?? (currentDecompilerSettings = LoadDecompilerSettings(ILSpySettings.Load()));
+				return currentDecompilerSettings ?? (currentDecompilerSettings = LoadDecompilerSettings(ILSpySettings.Load(MainWindow.GetConfigFile())));
 			}
 		}
 
@@ -71,13 +72,13 @@ namespace ICSharpCode.ILSpy.Options
 
 		public void Load(ILSpySettings settings)
 		{
-			this.DataContext = new DecompilerSettings(LoadDecompilerSettings(settings));
+			this.DataContext = new DecompilerSettingsViewModel(LoadDecompilerSettings(settings));
 		}
 
 		public void Save(XElement root)
 		{
 			XElement section = new XElement("DecompilerSettings");
-			var newSettings = ((DecompilerSettings)this.DataContext).ToDecompilerSettings();
+			var newSettings = ((DecompilerSettingsViewModel)this.DataContext).ToDecompilerSettings();
 			var properties = typeof(Decompiler.DecompilerSettings).GetProperties()
 				.Where(p => p.GetCustomAttribute<BrowsableAttribute>()?.Browsable != false);
 			foreach (var p in properties)
@@ -145,15 +146,15 @@ namespace ICSharpCode.ILSpy.Options
 		public void LoadDefaults()
 		{
 			currentDecompilerSettings = new Decompiler.DecompilerSettings();
-			this.DataContext = new DecompilerSettings(currentDecompilerSettings);
+			this.DataContext = new DecompilerSettingsViewModel(currentDecompilerSettings);
 		}
 	}
 
-	public class DecompilerSettings : INotifyPropertyChanged
+	public class DecompilerSettingsViewModel : INotifyPropertyChanged
 	{
 		public CSharpDecompilerSetting[] Settings { get; set; }
 
-		public DecompilerSettings(Decompiler.DecompilerSettings settings)
+		public DecompilerSettingsViewModel(Decompiler.DecompilerSettings settings)
 		{
 			Settings = typeof(Decompiler.DecompilerSettings).GetProperties()
 				.Where(p => p.GetCustomAttribute<BrowsableAttribute>()?.Browsable != false)

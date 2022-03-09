@@ -22,6 +22,7 @@ using System.IO;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp.ProjectDecompiler;
 using ICSharpCode.Decompiler.Metadata;
+using ICSharpCode.ILSpyX;
 
 using Microsoft.Win32;
 

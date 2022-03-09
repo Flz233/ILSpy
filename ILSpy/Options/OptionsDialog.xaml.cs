@@ -26,6 +26,7 @@ using System.Windows.Media;
 using System.Xml.Linq;
 
 using ICSharpCode.ILSpy.Properties;
+using ICSharpCode.ILSpyX;
 
 namespace ICSharpCode.ILSpy.Options
 {
@@ -57,7 +58,7 @@ namespace ICSharpCode.ILSpy.Options
 			// FIXME: Ideally, the export provider should be disposed when it's no longer needed.
 			var ep = App.ExportProviderFactory.CreateExportProvider();
 			this.optionPages = ep.GetExports<UIElement, IOptionsMetadata>("OptionPages").ToArray();
-			ILSpySettings settings = ILSpySettings.Load();
+			ILSpySettings settings = ILSpySettings.Load(MainWindow.GetConfigFile());
 			foreach (var optionPage in optionPages.OrderBy(p => p.Metadata.Order))
 			{
 				var tabItem = new TabItemViewModel(MainWindow.GetResourceString(optionPage.Metadata.Title), optionPage.Value);
@@ -80,7 +81,7 @@ namespace ICSharpCode.ILSpy.Options
 						if (page != null)
 							page.Save(root);
 					}
-				});
+				}, MainWindow.GetConfigFile());
 			this.DialogResult = true;
 			Close();
 		}

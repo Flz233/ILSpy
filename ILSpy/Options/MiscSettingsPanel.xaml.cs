@@ -19,6 +19,8 @@
 using System.Windows.Controls;
 using System.Xml.Linq;
 
+using ICSharpCode.ILSpyX;
+
 namespace ICSharpCode.ILSpy.Options
 {
 	/// <summary>
@@ -41,7 +43,7 @@ namespace ICSharpCode.ILSpy.Options
 
 		public static MiscSettings CurrentMiscSettings {
 			get {
-				return currentMiscSettings ?? (currentMiscSettings = LoadMiscSettings(ILSpySettings.Load()));
+				return currentMiscSettings ?? (currentMiscSettings = LoadMiscSettings(ILSpySettings.Load(MainWindow.GetConfigFile())));
 			}
 		}
 
