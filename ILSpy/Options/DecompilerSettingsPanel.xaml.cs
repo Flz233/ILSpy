@@ -44,11 +44,6 @@ namespace ICSharpCode.ILSpy.Options
 
 		static Decompiler.DecompilerSettings currentDecompilerSettings;
 
-		internal static void TestSetup(Decompiler.DecompilerSettings settings)
-		{
-			currentDecompilerSettings = settings;
-		}
-
 		public static Decompiler.DecompilerSettings CurrentDecompilerSettings {
 			get {
 				return currentDecompilerSettings ?? (currentDecompilerSettings = LoadDecompilerSettings(ILSpySettings.Load(MainWindow.GetConfigFile())));
